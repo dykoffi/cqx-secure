@@ -1,0 +1,33 @@
+{
+  "name": "cqx-secure",
+  "version": "1.0.0",
+  "description": "module tu secure cqx API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dykoffi/cqx-secure.git"
+  },
+  "keywords": [
+    "cqx",
+    "secure",
+    "prisma",
+    "secure"
+  ],
+  "author": {
+    "email": "koffiedy@gmail.com",
+    "name": "KOFFI Edy",
+    "url": "https://www.linkedin.com/in/edy-koffi-948494192/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dykoffi/cqx-secure/issues"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "on-finished": "^2.3.0"
+  },
+  "homepage": "https://github.com/dykoffi/cqx-secure#readme"
+}
