@@ -29,5 +29,6 @@
     "chalk": "^4.1.2",
     "on-finished": "^2.3.0"
   },
-  "homepage": "https://github.com/dykoffi/cqx-secure#readme"
+  "homepage": "https://github.com/dykoffi/cqx-secure#readme",
+  "type": "module"
 }
