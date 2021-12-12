@@ -6,10 +6,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dykoffi/cqx-secure.git"
-  },
   "keywords": [
     "cqx",
     "secure",
@@ -21,14 +17,18 @@
     "name": "KOFFI Edy",
     "url": "https://www.linkedin.com/in/edy-koffi-948494192/"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/dykoffi/cqx-secure/issues"
-  },
   "dependencies": {
     "chalk": "^4.1.2",
     "on-finished": "^2.3.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dykoffi/cqx-secure.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dykoffi/cqx-secure/issues"
+  },
   "homepage": "https://github.com/dykoffi/cqx-secure#readme",
+  "license": "MIT",
   "type": "module"
 }
