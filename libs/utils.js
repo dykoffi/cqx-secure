@@ -1,30 +1,30 @@
-import { existsSync } from 'fs';
-import { createCipheriv, createDecipheriv } from 'crypto';
-import { join } from 'path';
-import { cwd } from 'process';
-import chalk from 'chalk';
+const { existsSync } = require('fs');
+const { createCipheriv, createDecipheriv } = require('crypto');
+const { join } = require('path');
+const { cwd } = require('process');
+const chalk = require('chalk');
 
-export function verify() {
+exports.verify = function () {
     if (existsSync(join(cwd(), '.cqx'))) return true
     else return false
 }
 
-export function crypt(data, algorithm, passiv, iv) {
+exports.crypt = function (data, algorithm, passiv, iv) {
     let cipher = createCipheriv(algorithm, passiv, iv)
     let crypted = cipher.update(data, 'utf8', 'hex')
     crypted += cipher.final('hex');
     return crypted;
 }
 
-export function dcrypt(data, algorithm, passiv, iv) {
+exports.dcrypt = function (data, algorithm, passiv, iv) {
     var decipher = createDecipheriv(algorithm, passiv, iv)
     var dec = decipher.update(data, 'hex', 'utf8')
     dec += decipher.final('utf8');
     return dec;
 }
 
-export function logError(...message) { console.error(chalk.bold.red("Failed"), ":", ...message); }
-export function logSuccess(...message) { console.log(chalk.bold.green("Success"), ":", ...message); }
-export function logInfo(...message) { console.log(chalk.bold.blueBright("Info"), ":", ...message); }
+exports.logError = function (...message) { console.error(chalk.bold.red("Failed"), ":", ...message); }
+exports.logSuccess = function (...message) { console.log(chalk.bold.green("Success"), ":", ...message); }
+exports.logInfo = function (...message) { console.log(chalk.bold.blueBright("Info"), ":", ...message); }
 
-export const algo = "aes-256-ctr"
+exports.algo = "aes-256-ctr"
