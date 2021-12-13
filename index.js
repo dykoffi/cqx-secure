@@ -162,7 +162,7 @@ exports.dcryptObject = function (object, options) {
 }
 
 
-export async function giveToken(data, permission = 'public', expiresIn = '24h') {
+exports.giveToken = async function (data, permission = 'public', expiresIn = '24h') {
     try {
         data['_permission'] = permission
         let pass = randomBytes(32).toString('base64')
@@ -213,7 +213,7 @@ exports.checkToken = function (...permissions) {
     };
 }
 
-export async function freeToken(token) {
+exports.freeToken = async function (token) {
     try {
         await prisma.token_.delete({ where: { value: token } })
         return token
