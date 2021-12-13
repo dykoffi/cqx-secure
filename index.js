@@ -18,7 +18,7 @@ const prisma = new PrismaClient()
  * @param {String} value 
  * @returns {String | null}
  */
-export function cryptG(value, folder = join(cwd(), '.cqx', 'keys')) {
+exports.cryptG = function (value, folder = join(cwd(), '.cqx', 'keys')) {
     if (value !== null) {
         if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
             let passiv = readFileSync(join(folder, '.passiv.key')).toString()
@@ -40,7 +40,7 @@ export function cryptG(value, folder = join(cwd(), '.cqx', 'keys')) {
  * @param {String} value 
  * @returns {String | null}
  */
-export function dcryptG(value, folder = join(cwd(), '.cqx', 'keys')) {
+exports.dcryptG = function (value, folder = join(cwd(), '.cqx', 'keys')) {
     if (value !== null) {
         if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
             let passiv = readFileSync(join(folder, '.passiv.key')).toString()
@@ -64,7 +64,7 @@ export function dcryptG(value, folder = join(cwd(), '.cqx', 'keys')) {
  * @param {String} target 
  * @returns {String | null}
  */
-export function readCryptJson(source, target) {
+exports.readCryptJson = function (source, target) {
     if (verify()) {
         const dataKeys = join(cwd(), '.cqx', 'keys')
         const key = readFileSync(join(dataKeys, ".pass")).toString()
@@ -86,7 +86,7 @@ export function readCryptJson(source, target) {
  * @param {String} target 
  * @returns {String | null}
  */
-export function writeCryptJson(data, target) {
+exports.writeCryptJson = function (data, target) {
     if (verify()) {
         const dataKeys = join(cwd(), '.cqx', 'keys')
         const key = readFileSync(join(dataKeys, ".pass")).toString()
@@ -100,7 +100,7 @@ export function writeCryptJson(data, target) {
  * @param {Object} object 
  * @param {Object} options 
  */
-export function cryptObject(object, options) {
+exports.cryptObject = function (object, options) {
     try {
 
         let excludes = options?.excludes || []
@@ -133,7 +133,7 @@ export function cryptObject(object, options) {
  * @param {Object} object 
  * @param {Object} options 
  */
- export function dcryptObject(object, options) {
+exports.dcryptObject = function (object, options) {
     try {
 
         let excludes = options?.excludes || []
@@ -175,7 +175,7 @@ export async function giveToken(data, permission = 'public', expiresIn = '24h') 
     } catch (error) { console.error(error); }
 }
 
-export function checkToken(...permissions) {
+exports.checkToken = function (...permissions) {
     return async (req, res, next) => {
         try {
             let token = req.headers["x-access-token"]
@@ -220,7 +220,7 @@ export async function freeToken(token) {
     } catch (error) { console.error(error); }
 }
 
-export function saveLog() {
+exports.saveLog = function () {
     return (req, res, next) => {
         res.header("x-powered-by", "cqx")
         onFinished(res, async () => {
@@ -243,7 +243,7 @@ export function saveLog() {
 }
 
 // Function wich serve API
-export function serve() {
+exports.serve = function () {
     if (verify()) {
         const file = join(cwd(), '.cqx', 'data', '.release')
         const code = readFileSync(file).toString()
