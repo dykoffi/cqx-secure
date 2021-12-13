@@ -1,15 +1,15 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+const { existsSync, readFileSync, writeFileSync } = require('fs');
+const { join } = require('path');
 
-import { verify, crypt, dcrypt, algo, logError } from './libs/utils.js';
-import { randomBytes } from 'crypto';
+const { verify, crypt, dcrypt, algo, logError } = require('./libs/utils.js');
+const { randomBytes } = require('crypto');
 
-import jwt from 'jsonwebtoken';
-import { cwd } from 'process';
+const jwt = require('jsonwebtoken');
+const { cwd } = require('process');
 
-import onFinished from 'on-finished';
+const onFinished = require('on-finished');
 
-import { PrismaClient } from '@prisma/client'
+const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
