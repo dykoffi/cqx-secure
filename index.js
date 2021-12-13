@@ -168,7 +168,7 @@ exports.giveToken = async function (data, permission = 'public', expiresIn = '24
         let pass = randomBytes(32).toString('base64')
         let token = jwt.sign(data, pass, { expiresIn: expiresIn })
 
-        await prisma.token_.create({ pass: this.cryptG(pass), value: this.cryptG(token) })
+        await prisma.token_.create({ data: { pass: this.cryptG(pass), value: this.cryptG(token) } })
 
         return this.cryptG(token)
 
@@ -226,15 +226,18 @@ exports.saveLog = function () {
         onFinished(res, async () => {
             await prisma.log_.create(
                 {
-                    protocol: req.protocol,
-                    method: req.method,
-                    hostname: req.hostname,
-                    path: req.originalUrl || req.url,
-                    httpVersion: req.httpVersionMajor + '.' + req.httpVersionMinor,
-                    statusCode: res.statusCode,
-                    userIp: req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress),
-                    userReferer: req.headers['referer'],
-                    userAgent: req.headers['user-agent']
+                    data:
+                    {
+                        protocol: req.protocol,
+                        method: req.method,
+                        hostname: req.hostname,
+                        path: req.originalUrl || req.url,
+                        httpVersion: req.httpVersionMajor + '.' + req.httpVersionMinor,
+                        statusCode: res.statusCode,
+                        userIp: req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress),
+                        userReferer: req.headers['referer'],
+                        userAgent: req.headers['user-agent']
+                    }
                 }
             )
         })
