@@ -1,43 +1,78 @@
 /**
  * Crypt data
- * @param {String} value
- * @returns {String | null}
+ * @param value
  */
-export function cryptG(value: string, folder?: any): string | null;
+export function cryptG(value: string, folder?: string): string | null;
 /**
  * deCrypt data
- * @param {String} value
- * @returns {String | null}
+ * @param value
  */
-export function dcryptG(value: string, folder?: any): string | null;
+export function dcryptG(value: string, folder?: string): string | null;
 /**
  * readCryptJson data
- * @param {String} source
- * @param {String} target
- * @returns {String | null}
+ * @param source
+ * @param target
  */
 export function readCryptJson(source: string, target: string): string | null;
 /**
  * writeCryptJson data
- * @param {String} source
- * @param {String} target
- * @returns {String | null}
+ * @param data
+ * @param target
  */
-export function writeCryptJson(data: any, target: string): string | null;
+export function writeCryptJson(data: string, target: string): string | null;
 /**
- * Crypt json object
- * @param {Object} object
- * @param {Object} options
+ * EnCrypt json object
+ * @param object
+ * @param options
  */
-export function cryptObject(object: any, options: any): any;
+interface cryptObjectOptionsType {
+    recursive: boolean,
+    excludes: Array<string>
+}
+
+export function cryptObject(object: object, options: cryptObjectOptionsType): object;
 /**
- * Crypt json object
- * @param {Object} object
- * @param {Object} options
+ * DeCrypt json object
+ * @param object
+ * @param options
  */
-export function dcryptObject(object: any, options: any): any;
-export function giveToken(data: any, permission?: string, expiresIn?: string): Promise<any>;
-export function checkToken(...permissions: any[]): (req: any, res: any, next: any) => Promise<void>;
-export function freeToken(token: any): Promise<any>;
+export function dcryptObject(object: object, options: cryptObjectOptionsType): object;
+
+/**
+ * Decrypt object in array
+ * @param data 
+ * @param options 
+ */
+export function dcryptArrayObject(data: string[], options: cryptObjectOptionsType): object;
+
+/**
+ * Encrypt object in array
+ * @param data 
+ * @param options 
+ */
+export function cryptArrayObject(data: string[], options: cryptObjectOptionsType): object;
+
+/**
+ * Generates token string, save it ib database and return it
+ * @param data 
+ * @param permission 
+ * @param expiresIn 
+ */
+export function giveToken(data: object, permission?: string, expiresIn?: string): Promise<string>;
+
+/**
+ * Verify if token is valid
+ * @param permissions 
+ */
+export function checkToken(...permissions: string[]): (req: any, res: any, next: any) => Promise<void>;
+
+/**
+ * Delete token
+ * @param token 
+ */
+export function freeToken(token: string): Promise<any>;
+
+/**
+ * Save data request in database
+ */
 export function saveLog(): (req: any, res: any, next: any) => void;
-export function serve(): void;

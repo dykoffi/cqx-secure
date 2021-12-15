@@ -18,7 +18,7 @@ const prisma = new PrismaClient()
  * @param {String} value 
  * @returns {String | null}
  */
-exports.cryptG = (value, folder = join(cwd(), '.cqx', 'keys')) => {
+function cryptG(value, folder = join(cwd(), '.cqx', 'keys')) {
     if (value !== null) {
         if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
             let passiv = readFileSync(join(folder, '.passiv.key')).toString()
@@ -40,7 +40,7 @@ exports.cryptG = (value, folder = join(cwd(), '.cqx', 'keys')) => {
  * @param {String} value 
  * @returns {String | null}
  */
-exports.dcryptG = (value, folder = join(cwd(), '.cqx', 'keys')) => {
+function dcryptG(value, folder = join(cwd(), '.cqx', 'keys')) {
     if (value !== null) {
         if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
             let passiv = readFileSync(join(folder, '.passiv.key')).toString()
@@ -64,12 +64,13 @@ exports.dcryptG = (value, folder = join(cwd(), '.cqx', 'keys')) => {
  * @param {String} target 
  * @returns {String | null}
  */
-exports.readCryptJson = function (source, target) {
+
+function readCryptJson(source, target) {
     if (verify()) {
         const dataKeys = join(cwd(), '.cqx', 'keys')
         const key = readFileSync(join(dataKeys, ".pass")).toString()
         const dataCrypt = readFileSync(source).toString()
-        const dataDcrypt = this.dcryptG(dataCrypt, dataKeys)
+        const dataDcrypt = dcryptG(dataCrypt, dataKeys)
         const dataJWT = jwt.verify(dataDcrypt, key)
 
         if (target !== undefined) {
@@ -86,21 +87,22 @@ exports.readCryptJson = function (source, target) {
  * @param {String} target 
  * @returns {String | null}
  */
-exports.writeCryptJson = function (data, target) {
+function writeCryptJson(data, target) {
     if (verify()) {
         const dataKeys = join(cwd(), '.cqx', 'keys')
         const key = readFileSync(join(dataKeys, ".pass")).toString()
         const dataJWT = jwt.sign(data, key)
-        writeFileSync(target, this.cryptG(dataJWT, dataKeys))
+        writeFileSync(target, cryptG(dataJWT, dataKeys))
     }
 }
+
 
 /**
  * Crypt json object
  * @param {Object} object 
  * @param {Object} options 
  */
-exports.cryptObject = function (object, options) {
+function cryptObject(object, options) {
     try {
 
         let excludes = options?.excludes || []
@@ -133,7 +135,7 @@ exports.cryptObject = function (object, options) {
  * @param {Object} object 
  * @param {Object} options 
  */
-exports.dcryptObject = function (object, options) {
+function dcryptObject(object, options) {
     try {
 
         let excludes = options?.excludes || []
@@ -148,7 +150,7 @@ exports.dcryptObject = function (object, options) {
                         object[field] = dcryptObject(object[field], options)
                     }
                 } else {
-                    object[field] = this.dcryptG(object[field])
+                    object[field] = dcryptG(object[field])
                 }
             }
         });
@@ -161,6 +163,34 @@ exports.dcryptObject = function (object, options) {
 
 }
 
+/**
+ * cryptArrayObject
+ * @param {array<object>} array 
+ * @param {object} options 
+ */
+
+function cryptArrayObject(data, options) {
+    try {
+        return data.map(o => cryptObject(o, options))
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+/**
+ * dcryptArrayObject
+ * @param {array<object>} array 
+ * @param {object} options 
+ */
+
+function dcryptArrayObject(data, options) {
+    try {
+        return data.map(o => dcryptObject(o, options))
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 
 exports.giveToken = async function (data, permission = 'public', expiresIn = '24h') {
     try {
@@ -168,9 +198,9 @@ exports.giveToken = async function (data, permission = 'public', expiresIn = '24
         let pass = randomBytes(32).toString('base64')
         let token = jwt.sign(data, pass, { expiresIn: expiresIn })
 
-        await prisma.token_.create({ data: { pass: this.cryptG(pass), value: this.cryptG(token) } })
+        await prisma.token_.create({ data: { pass: cryptG(pass), value: cryptG(token) } })
 
-        return this.cryptG(token)
+        return cryptG(token)
 
     } catch (error) { console.error(error); }
 }
@@ -181,13 +211,13 @@ exports.checkToken = function (...permissions) {
             let token = req.headers["x-access-token"]
             if (token) {
                 let reply = await prisma.token_.findUnique({ where: { value: token } })
-                token = this.dcryptG(token)
+                token = dcryptG(token)
                 if (reply === null) {
                     res.status(403).send({ error: "ErrorToken", message: "false token" })
                 }
                 else {
                     try {
-                        let pass = this.dcryptG(reply.pass)
+                        let pass = dcryptG(reply.pass)
                         let data = jwt.verify(token, pass)
                         if (permissions) {
                             let userPermission = data['_permission']
@@ -250,8 +280,17 @@ exports.serve = function () {
     if (verify()) {
         const file = join(cwd(), '.cqx', 'data', '.release')
         const code = readFileSync(file).toString()
-        eval(this.dcryptG(code))
+        eval(dcryptG(code))
     } else {
         logError("This not cqx project")
     }
 }
+
+exports.dcryptG = dcryptG
+exports.cryptG = cryptG
+exports.readCryptJson = readCryptJson
+exports.writeCryptJson = writeCryptJson
+exports.cryptObject = cryptObject
+exports.dcryptObject = dcryptObject
+exports.cryptArrayObject = cryptArrayObject
+exports.dcryptArrayObject = dcryptArrayObject
