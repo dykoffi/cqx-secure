@@ -18,7 +18,7 @@ const prisma = new PrismaClient()
  * @param {String} value 
  * @returns {String | null}
  */
-exports.cryptG = function (value, folder = join(cwd(), '.cqx', 'keys')) {
+exports.cryptG = (value, folder = join(cwd(), '.cqx', 'keys')) => {
     if (value !== null) {
         if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
             let passiv = readFileSync(join(folder, '.passiv.key')).toString()
@@ -40,7 +40,7 @@ exports.cryptG = function (value, folder = join(cwd(), '.cqx', 'keys')) {
  * @param {String} value 
  * @returns {String | null}
  */
-exports.dcryptG = function (value, folder = join(cwd(), '.cqx', 'keys')) {
+exports.dcryptG = (value, folder = join(cwd(), '.cqx', 'keys')) => {
     if (value !== null) {
         if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
             let passiv = readFileSync(join(folder, '.passiv.key')).toString()
