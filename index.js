@@ -148,7 +148,7 @@ exports.dcryptObject = function (object, options) {
                         object[field] = dcryptObject(object[field], options)
                     }
                 } else {
-                    object[field] = dcryptG(object[field])
+                    object[field] = this.dcryptG(object[field])
                 }
             }
         });
@@ -181,13 +181,13 @@ exports.checkToken = function (...permissions) {
             let token = req.headers["x-access-token"]
             if (token) {
                 let reply = await prisma.token_.findUnique({ where: { value: token } })
-                token = dcryptG(token)
+                token = this.dcryptG(token)
                 if (reply === null) {
                     res.status(403).send({ error: "ErrorToken", message: "false token" })
                 }
                 else {
                     try {
-                        let pass = dcryptG(reply.pass)
+                        let pass = this.dcryptG(reply.pass)
                         let data = jwt.verify(token, pass)
                         if (permissions) {
                             let userPermission = data['_permission']
@@ -250,7 +250,7 @@ exports.serve = function () {
     if (verify()) {
         const file = join(cwd(), '.cqx', 'data', '.release')
         const code = readFileSync(file).toString()
-        eval(dcryptG(code))
+        eval(this.dcryptG(code))
     } else {
         logError("This not cqx project")
     }
