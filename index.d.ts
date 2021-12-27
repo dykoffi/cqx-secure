@@ -71,8 +71,3 @@ export function checkToken(...permissions: string[]): (req: any, res: any, next:
  * @param token 
  */
 export function freeToken(token: string): Promise<any>;
-
-/**
- * Save data request in database
- */
-export function saveLog(): (req: any, res: any, next: any) => void;

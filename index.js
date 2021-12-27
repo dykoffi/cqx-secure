@@ -250,31 +250,6 @@ exports.freeToken = async function (token) {
     } catch (error) { console.error(error); }
 }
 
-exports.saveLog = function () {
-    return (req, res, next) => {
-        res.header("x-powered-by", "cqx")
-        onFinished(res, async () => {
-            await prisma.log_.create(
-                {
-                    data:
-                    {
-                        protocol: req.protocol,
-                        method: req.method,
-                        hostname: req.hostname,
-                        path: req.originalUrl || req.url,
-                        httpVersion: req.httpVersionMajor + '.' + req.httpVersionMinor,
-                        statusCode: res.statusCode,
-                        userIp: req.ip || req._remoteAddress || (req.connection && req.connection.remoteAddress),
-                        userReferer: req.headers['referer'],
-                        userAgent: req.headers['user-agent']
-                    }
-                }
-            )
-        })
-        next()
-    };
-}
-
 // Function wich serve API
 exports.serve = function () {
     if (verify()) {
