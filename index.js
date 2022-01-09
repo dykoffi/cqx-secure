@@ -208,15 +208,16 @@ exports.giveToken = async function (data, permission = 'public', expiresIn = '24
 exports.checkToken = function (...permissions) {
     return async (req, res, next) => {
         try {
+            permissions = permissions.length === 0 ? ["public"] : permissions
             let token = req.headers["x-access-token"]
             if (token) {
-                let reply = await prisma.token_.findUnique({ where: { value: token } })
-                token = dcryptG(token)
+                let reply = await prisma.token_.findFirst({ where: { value: token } })
                 if (reply === null) {
                     res.status(403).send({ error: "ErrorToken", message: "false token" })
                 }
                 else {
                     try {
+                        token = dcryptG(token)
                         let pass = dcryptG(reply.pass)
                         let data = jwt.verify(token, pass)
                         if (permissions) {
