@@ -194,9 +194,9 @@ function dcryptArrayObject(data, options) {
 
 exports.giveToken = async function (data, permission = 'public', expiresIn = '24h') {
     try {
-        data['_permission'] = permission
+        let data2 = {...data, permission_ : permission}
         let pass = randomBytes(32).toString('base64')
-        let token = jwt.sign(data, pass, { expiresIn: expiresIn })
+        let token = jwt.sign(data2, pass, { expiresIn: expiresIn })
 
         await prisma.token_.create({ data: { pass: cryptG(pass), value: cryptG(token) } })
 
@@ -221,7 +221,7 @@ exports.checkToken = function (...permissions) {
                         let pass = dcryptG(reply.pass)
                         let data = jwt.verify(token, pass)
                         if (permissions) {
-                            let userPermission = data['_permission']
+                            let userPermission = data['permission_']
                             if (permissions.includes(userPermission)) {
                                 next()
                             } else {
