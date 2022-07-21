@@ -1,0 +1,82 @@
+import { decryptJWT, encryptJWT, encryptObject, decryptObject } from "../libs/json"
+
+describe("Test object functions", () => {
+
+    describe("Test encryptJWT function", () => {
+
+        let data: object = { nom: "koffi" }
+        let cdata: string | undefined
+
+        test("Must crypt data and return string", () => {
+            cdata = encryptJWT(data, undefined)
+            expect(cdata).toBeDefined()
+        })
+
+        test("Must crypt data and create file", () => {
+            cdata = encryptJWT(data, "./tests/cdata")
+        })
+
+    })
+
+    describe("Test decryptJWT function", () => {
+
+        let ddata: string | undefined | object
+
+        test("Must dcrypt data and return string", () => {
+            ddata = decryptJWT("./tests/cdata", undefined)
+        })
+
+        test("Must dcrypt data and create file", () => {
+            ddata = decryptJWT("./tests/cdata", "./tests/ddata.json")
+        })
+
+    })
+
+    describe("Test encryptObject & decryptObject function", () => {
+
+        let cdata: object
+        let ddata: object
+
+        let data = {
+            firstName: "Edy",
+            lastName: "KOFFI",
+            school: {
+                location: "Treichville",
+                category: "High School",
+                courses: ["Math", "English", "French"]
+            }
+        }
+
+        test("Must encrypt object data with recursive option false", () => {
+            cdata = encryptObject({ ...data }, { excludes: ["category"], recursive: false })
+            expect(cdata["school"]["category"]).toBe("High School")
+            expect(cdata["school"]).toEqual({
+                location: "Treichville",
+                category: "High School",
+                courses: ["Math", "English", "French"]
+            })
+            console.log(cdata);
+        })
+
+        test("Must encrypt object data without field excludes", () => {
+            cdata = encryptObject({ ...data })
+            console.log(cdata);
+            expect(cdata["school"]["category"]).toBe("5c5bd5ea6aa53490f7c6d5")
+        })
+
+
+        test("Must decrypt cdata to data object data without field category", () => {
+            ddata = decryptObject({ ...cdata }, { recursive: false })
+            console.log(cdata);
+
+            expect(ddata["school"]["location"]).toBe("Treichville")
+        })
+
+        test("Must decrypt object data with recursive option false", () => {
+            
+            ddata = decryptObject({ ...cdata }, { excludes: ["category"], recursive: false })
+            expect(ddata["school"]["category"]).toBe("High School")
+        })
+    })
+
+})
