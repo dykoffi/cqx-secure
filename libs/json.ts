@@ -4,6 +4,7 @@ import { encrypt, decrypt } from './crypto';
 
 import jwt from 'jsonwebtoken';
 import { verify } from './utils';
+import { cloneDeep } from "lodash"
 
 interface options {
     recursive?: boolean
@@ -20,7 +21,7 @@ export function decryptJWT(source: PathOrFileDescriptor, target: PathOrFileDescr
         const dataJWT = jwt.verify(dataDcrypt, key)
 
         if (target !== undefined) {
-            writeFileSync(target, String(dataJWT))
+            writeFileSync(target, JSON.stringify(dataJWT, null, 2))
         } else {
             return dataJWT
         }
@@ -43,26 +44,28 @@ export function encryptJWT(data: object, target: PathOrFileDescriptor | undefine
 }
 
 export function encryptObject(data: Object, options: options = { excludes: [], recursive: true }) {
+
     let excludes = options.excludes || []
     let recursive = options.recursive === false ? false : true
 
-    let keys = Object.keys(data)
+    let cloneData = cloneDeep(data)
+
+    let keys = Object.keys(cloneData)
 
     keys.forEach(field => {
         if (!excludes.includes(field)) {
-            if (data[field] instanceof Object) {
+            if (cloneData[field] instanceof Object) {
                 if (recursive) {
-                    data[field]=null
-                    data[field] = encryptObject(data[field], options)
+                    cloneData[field] = encryptObject(cloneData[field], options)
                 }
             }
-            else {              
-                data[field] = encrypt(String(data[field]))
+            else {
+                cloneData[field] = encrypt(String(cloneData[field]))
             }
         }
     });
 
-    return data
+    return cloneData
 }
 
 
@@ -71,20 +74,22 @@ export function decryptObject(data: Object, options: options = { excludes: [], r
     let excludes = options?.excludes || []
     let recursive = options.recursive === false ? false : true
 
-    let keys = Object.keys(data)
+    let cloneData = cloneDeep(data)
+
+    let keys = Object.keys(cloneData)
 
     keys.forEach(field => {
         if (!excludes.includes(field)) {
-            if (data[field] instanceof Object) {
+            if (cloneData[field] instanceof Object) {
                 if (recursive) {
-                    data[field] = decryptObject(data[field], options)
+                    cloneData[field] = decryptObject(cloneData[field], options)
                 }
             } else {
-                data[field] = decrypt(data[field])
+                cloneData[field] = decrypt(String(cloneData[field]))
             }
         }
     });
 
-    return data
+    return cloneData
 
 }

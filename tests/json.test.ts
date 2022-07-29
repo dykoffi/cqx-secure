@@ -24,6 +24,7 @@ describe("Test object functions", () => {
 
         test("Must dcrypt data and return string", () => {
             ddata = decryptJWT("./tests/cdata", undefined)
+            expect(ddata).toBeDefined()
         })
 
         test("Must dcrypt data and create file", () => {
@@ -48,34 +49,30 @@ describe("Test object functions", () => {
         }
 
         test("Must encrypt object data with recursive option false", () => {
-            cdata = encryptObject({ ...data }, { excludes: ["category"], recursive: false })
-            expect(cdata["school"]["category"]).toBe("High School")
+            cdata = encryptObject(data, { excludes: ["lastName"], recursive: false })
+            expect(cdata["lastName"]).toBe("KOFFI")
             expect(cdata["school"]).toEqual({
                 location: "Treichville",
                 category: "High School",
                 courses: ["Math", "English", "French"]
             })
-            console.log(cdata);
         })
 
         test("Must encrypt object data without field excludes", () => {
-            cdata = encryptObject({ ...data })
-            console.log(cdata);
+            cdata = encryptObject(data)
             expect(cdata["school"]["category"]).toBe("5c5bd5ea6aa53490f7c6d5")
         })
 
 
         test("Must decrypt cdata to data object data without field category", () => {
-            ddata = decryptObject({ ...cdata }, { recursive: false })
-            console.log(cdata);
-
+            ddata = decryptObject(cdata)
             expect(ddata["school"]["location"]).toBe("Treichville")
         })
 
         test("Must decrypt object data with recursive option false", () => {
             
-            ddata = decryptObject({ ...cdata }, { excludes: ["category"], recursive: false })
-            expect(ddata["school"]["category"]).toBe("High School")
+            ddata = decryptObject(cdata, { excludes: ["category"], recursive: false })
+            expect(ddata["school"]["category"]).toBe("5c5bd5ea6aa53490f7c6d5")
         })
     })
 
