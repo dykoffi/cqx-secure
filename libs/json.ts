@@ -21,6 +21,7 @@ export function decryptJWT(source: PathOrFileDescriptor, target: PathOrFileDescr
         const dataJWT = jwt.verify(dataDcrypt, key)
 
         if (target !== undefined) {
+            delete dataJWT['iat']
             writeFileSync(target, JSON.stringify(dataJWT, null, 2))
         } else {
             return dataJWT
