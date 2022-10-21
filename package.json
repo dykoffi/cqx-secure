@@ -1,0 +1,52 @@
+{
+  "name": "cqx-secure",
+  "version": "1.1.1",
+  "description": "module tu secure cqx API",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "keywords": [
+    "cqx",
+    "secure"
+  ],
+  "author": {
+    "email": "koffiedy@gmail.com",
+    "name": "KOFFI Edy",
+    "url": "https://www.linkedin.com/in/edy-koffi-948494192/"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": ".",
+    "roots": [
+      "./tests/"
+    ],
+    "testRegex": ".*\\.test\\.js$",
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dykoffi/cqx-secure.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dykoffi/cqx-secure/issues"
+  },
+  "homepage": "https://github.com/dykoffi/cqx-secure#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^28.1.3"
+  }
+}
