@@ -6,7 +6,13 @@ const jwt = require("jsonwebtoken")
 const { verify } = require("./utils")
 const { cloneDeep } = require("lodash")
 
-/* Decrypting the JWT. */
+/**
+ * Decrypt jtw data into file.
+ * @function decryptJWT
+ * @param {string} source - The path of the file you want to decrypt.
+ * @param {string=} target - Optional - The path of the file which will contain the decrypted data.
+ */
+
 exports.decryptJWT = (source, target) => {
     if (verify()) {
 
@@ -16,8 +22,9 @@ exports.decryptJWT = (source, target) => {
         const dataDcrypt = decrypt(dataCrypt, dataKeys)
         const dataJWT = jwt.verify(dataDcrypt, key)
 
+        delete dataJWT['iat']
+
         if (target !== undefined) {
-            delete dataJWT['iat']
             writeFileSync(target, JSON.stringify(dataJWT, null, 2))
         } else {
             return dataJWT
@@ -26,7 +33,13 @@ exports.decryptJWT = (source, target) => {
 }
 
 
-/* Encrypting the data. */
+/**
+ * Encrypt jtw data into file.
+ * @function encryptJWT
+ * @param {string} data - The data you want to encrypt.
+ * @param {string=} target - Optional - The path of the file which will contain the encrypted data.
+ */
+
 exports.encryptJWT = (data, target) => {
     if (verify()) {
         const dataKeys = join(process.cwd(), '.cqx', 'keys')
@@ -41,8 +54,15 @@ exports.encryptJWT = (data, target) => {
     }
 }
 
-/* Encrypting an object. */
-function encryptObject (data, options = { excludes: [], recursive: true }) {
+
+/**
+ * A function that encrypt an object.
+ * @function decryptObject
+ * @param {object} data - Object you want to encrypt.
+ * @param {{excludes: string[], recursive: boolean}} options - The folder which contains the keys.
+ */
+
+function encryptObject(data, options = { excludes: [], recursive: true }) {
 
     let excludes = options.excludes || []
     let recursive = options.recursive === false ? false : true
@@ -67,9 +87,14 @@ function encryptObject (data, options = { excludes: [], recursive: true }) {
     return cloneData
 }
 
+/**
+ * A function that decrypts an object.
+ * @function decryptObject
+ * @param {object} data - Object you want to decrypt.
+ * @param {{excludes: string[], recursive: boolean}} options - The folder which contains the keys.
+ */
 
-/* A function that decrypts an object. */
-function decryptObject (data, options = { excludes: [], recursive: true }) {
+function decryptObject(data, options = { excludes: [], recursive: true }) {
 
     let excludes = options?.excludes || []
     let recursive = options.recursive === false ? false : true
@@ -78,6 +103,7 @@ function decryptObject (data, options = { excludes: [], recursive: true }) {
 
     let keys = Object.keys(cloneData)
 
+    /* Decrypting the data. */
     keys.forEach(field => {
         if (!excludes.includes(field)) {
             if (cloneData[field] instanceof Object) {

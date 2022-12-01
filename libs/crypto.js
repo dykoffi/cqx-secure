@@ -3,6 +3,13 @@ const { existsSync, readFileSync } = require("fs")
 const { join } = require("path")
 const { crypt, dcrypt, algo } = require("./utils")
 
+/**
+ * Encrypt data with project keys.
+ * @function encrypt
+ * @param {string} value - The value you want to encrypt.
+ * @param {string} folder - The folder which contains the keys.
+ */
+
 exports.encrypt = (value, folder = join(process.cwd(), '.cqx', 'keys')) => {
     if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
 
@@ -17,6 +24,13 @@ exports.encrypt = (value, folder = join(process.cwd(), '.cqx', 'keys')) => {
         throw new Error("Keys not exist");
     }
 }
+
+/**
+ * Decrypt value with project keys.
+ * @function decrypt
+ * @param {string} value - The value you want to decrypt.
+ * @param {string} folder - The folder which contains the keys.
+ */
 
 exports.decrypt = (value, folder = join(process.cwd(), '.cqx', 'keys')) => {
     if (existsSync(join(folder, '.passiv.key')) && existsSync(join(folder, '.iv.key'))) {
