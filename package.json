@@ -1,8 +1,9 @@
 {
   "name": "cqx-secure",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "module tu secure cqx API",
   "main": "index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
     "test": "jest --coverage"
   },
